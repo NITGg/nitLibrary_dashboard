@@ -1,0 +1,314 @@
+"use client";
+import React, { useRef, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import toast from "react-hot-toast";
+import { LoadingIcon, PhotoIcon } from "../icons";
+import { useLocale, useTranslations } from "next-intl";
+import axios from "axios";
+import { useAppContext } from "@/context/appContext";
+import { useAppDispatch } from "@/hooks/redux";
+import {
+  addCategory,
+  updateCategory,
+} from "@/redux/reducers/categoriesReducer";
+
+import ImageApi from "../ImageApi";
+import { Category } from "@/app/[locale]/categories/categoriesData";
+import FetchSelect from "../FetchSelect";
+import fetchCategories from "@/lib/fetchCategories";
+import { OutlineInput, OutlineTextArea } from "../ui/OutlineInputs";
+import { Checkbox } from "../ui/checkbox";
+
+interface PopupCategoryProps {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  category?: Category;
+  parentName?: string;
+}
+
+const PopupCategory: React.FC<PopupCategoryProps> = ({
+  setOpen,
+  category,
+  parentName,
+}) => {
+  const [previewImage, setPreviewImage] = useState(category?.imageUrl || "");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+    setError,
+  } = useForm({
+    defaultValues: {
+      name: category?.name || "",
+      nameAr: category?.nameAr || "",
+      description: category?.description || "",
+      isActive: category?.isActive ?? true,
+      parent: category?.parent || undefined,
+    },
+  });
+
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations("category");
+  const { token } = useAppContext();
+  const dispatch = useAppDispatch();
+
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        setIsImageLoading(true);
+        setImageFile(file);
+        const tempUrl = URL.createObjectURL(file);
+
+        await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = tempUrl;
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+
+        setPreviewImage(tempUrl);
+      } catch (error) {
+        console.error("Error loading image:", error);
+        toast.error(t("error.image_load_failed"));
+      } finally {
+        setIsImageLoading(false);
+      }
+    }
+  };
+  const lang = useLocale() as "en" | "ar";
+
+  const handleImageClick = () => {
+    imageInputRef.current?.click();
+  };
+
+  const onSubmit = handleSubmit(async (formData) => {
+    try {
+      if (!category && !previewImage) {
+        toast.error(t("error.error_image_required"));
+        return;
+      }
+
+      if (!formData.name.trim() && !formData.nameAr.trim()) {
+        toast.error(t("error.error_name_required"));
+        return;
+      }
+      console.log(formData);
+
+      setLoading(true);
+
+      const submitFormData = new FormData();
+      submitFormData.append("name", formData.name);
+      submitFormData.append("nameAr", formData.nameAr);
+      submitFormData.append("description", formData.description || "");
+      submitFormData.append("isActive", String(formData.isActive));
+      if (formData.parent)
+        submitFormData.append("parentId", String(formData.parent));
+      if (imageFile) {
+        submitFormData.append("imageUrl", imageFile);
+      }
+
+      const fields =
+        "id,name,nameAr,description,imageUrl,parent=id-name,createdAt,isActive,_count=children-products";
+
+      if (category?.id) {
+        const { data } = await axios.put(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories/${category.id}?fields=${fields}`,
+          submitFormData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "accept-language": lang,
+            },
+          }
+        );
+        console.log("Category updated:", data);
+
+        dispatch(updateCategory(data.category));
+        toast.success(t("success.update"));
+      } else {
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories?fields=${fields}`,
+          submitFormData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "accept-language": lang,
+            },
+          }
+        );
+        dispatch(addCategory(data.category));
+        toast.success(t("success.add"));
+      }
+
+      setOpen(false);
+    } catch (error: any) {
+      if (error.response?.data?.error.includes("categories_name_key")) {
+        setError("name", {
+          type: "manual",
+          message: t("name_exists"),
+        });
+      }
+      console.error("Submit Error:", error);
+      toast.error(error?.response?.data?.message || t("error.general"));
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  return (
+    <form
+      className="h-[90%] overflow-auto flex flex-col gap-4 pb-2 px-2"
+      onSubmit={onSubmit}
+    >
+      <input
+        ref={imageInputRef}
+        type="file"
+        onChange={handleImageChange}
+        className="hidden"
+        accept="image/*"
+      />
+
+      <div className="relative h-72">
+        <div
+          onClick={handleImageClick}
+          className="cursor-pointer flex justify-center items-center rounded-lg overflow-hidden bg-slate-100"
+        >
+          {isImageLoading ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <LoadingIcon className="w-10 h-10 animate-spin text-teal-500" />
+              <span className="text-sm text-gray-500 mt-2">{t("loading")}</span>
+            </div>
+          ) : previewImage ? (
+            <div className="relative group h-72 flex justify-center items-center">
+              <ImageApi
+                src={previewImage}
+                alt="Category"
+                height={64}
+                width={48}
+                className="w-48 object-contain rounded-3xl"
+              />
+              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer rounded-lg">
+                <PhotoIcon className="size-10 text-white" />
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center">
+              <PhotoIcon className="size-10 text-gray-400" />
+              <span className="text-sm text-gray-500 mt-2">
+                {t("clickToUpload")}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <OutlineInput
+        label={t("name")}
+        id="name"
+        error={errors.name?.message as string}
+        {...register("name", {
+          required: t("nameIsRequired"),
+        })}
+      />
+
+      <OutlineInput
+        label={t("nameAr")}
+        id="nameAr"
+        error={errors.nameAr?.message as string}
+        {...register("nameAr")}
+      />
+
+      <OutlineTextArea
+        id="description"
+        label={t("description")}
+        error={errors.description?.message as string}
+        {...register("description")}
+        rows={6}
+      />
+
+      <FetchSelect<Category>
+        fieldForm={"parent"}
+        label={t("parent_category")}
+        fetchFunction={(params) =>
+          fetchCategories({
+            ...params,
+            token,
+            lang,
+            parentName,
+            ...(category ? { notIn: [category.id] } : {}),
+          })
+        }
+        getOptionValue={(item) => item.id}
+        getOptionDisplayText={(item) => item.name}
+        getOptionLabel={(item) => item.name}
+        placeholder={t("placeholder_category_edit_parent")}
+        className="w-full"
+        errors={errors}
+        roles={{ required: false }}
+        register={register as any}
+        setValue={setValue as any}
+        defaultValues={
+          category?.parent
+            ? [
+                {
+                  id: category.parent.id ?? 0,
+                  name: category.parent.name ?? "",
+                  nameAr: category.parent.nameAr ?? "",
+                  description: category.parent.description ?? "",
+                  imageUrl: category.parent.imageUrl ?? "",
+                  parentId: category.parent.parentId ?? undefined,
+                  parent: category.parent.parent ?? undefined,
+                  children: category.parent.children ?? undefined,
+                  isActive: category.parent.isActive ?? true,
+                  createdAt: category.parent.createdAt ?? "",
+                  updatedAt: category.parent.updatedAt ?? "",
+                },
+              ]
+            : []
+        }
+      />
+
+      <div className="flex items-center gap-2">
+        <Controller
+          control={control}
+          name="isActive"
+          render={({ field }) => (
+            <Checkbox
+              id="isActive"
+              defaultChecked={category?.isActive ?? true}
+              onCheckedChange={(checked) => field.onChange(checked)}
+              checked={field.value}
+            />
+          )}
+        />
+        <label htmlFor="isActive" className="text-sm cursor-pointer">
+          {" "}
+          {t("active_status")}
+        </label>
+      </div>
+
+      <div className="w-full">
+        <button
+          disabled={loading}
+          className="w-full py-2 rounded-md border-2 border-primary hover:bg-primary hover:text-white duration-200 flex justify-center"
+        >
+          {loading && (
+            <LoadingIcon className="size-6 animate-spin hover:stroke-white" />
+          )}
+          {!loading &&
+            (category ? t("button_submit_edit") : t("button_submit_add"))}
+        </button>
+      </div>
+    </form>
+  );
+};
+
+export default PopupCategory;
