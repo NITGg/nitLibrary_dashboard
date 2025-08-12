@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
     if (keysOnly) {
       const enKeys = Object.keys(enData);
       const arKeys = Object.keys(arData);
-      const allKeys = [...new Set([...enKeys, ...arKeys])];
+      const allKeys = Array.from(new Set([...enKeys, ...arKeys]));
 
       return NextResponse.json({ keys: allKeys });
     }
