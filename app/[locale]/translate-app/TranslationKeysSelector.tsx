@@ -31,9 +31,7 @@ export default function TranslationKeysSelector({
   };
 
   const handleDeleteSection = async (section: string) => {
-    if (
-      !window.confirm(t("deleteSectionConfirmation", { section }))
-    ) {
+    if (!window.confirm(t("deleteSectionConfirmation", { section }))) {
       return;
     }
 
@@ -47,16 +45,16 @@ export default function TranslationKeysSelector({
 
       if (response.ok) {
         const data = await response.json();
-        toast.success(
-          data.message || t("sectionDeleted", { section })
-        );
+        toast.success(data.message || t("sectionDeleted", { section }));
         // Refresh the page to update the sections list
         setTimeout(() => {
           window.location.reload();
         }, 1500);
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.error || t("failedToDeleteSection", { section }));
+        throw new Error(
+          errorData.error || t("failedToDeleteSection", { section })
+        );
       }
     } catch (error) {
       console.error("Error deleting section:", error);
@@ -196,13 +194,17 @@ export default function TranslationKeysSelector({
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">2</div>
-                <div className="text-sm text-muted-foreground">{t("languages")}</div>
+                <div className="text-sm text-muted-foreground">
+                  {t("languages")}
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">
                   AR + EN
                 </div>
-                <div className="text-sm text-muted-foreground">{t("supported")}</div>
+                <div className="text-sm text-muted-foreground">
+                  {t("supported")}
+                </div>
               </div>
             </div>
           </CardContent>
