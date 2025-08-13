@@ -8,6 +8,7 @@ export interface Product {
   name: string;
   nameAr?: string;
   description?: string;
+  descriptionAr?: string;
   images?: string[];
   price: number;
   costPrice?: number;
@@ -58,7 +59,7 @@ export const fetchProducts = async (
           ? searchParams.sortArchive?.toString()
           : searchParams.sort?.toString()) ?? "-createdAt",
       fields:
-        "id,name,nameAr,description,images,price,stock,createdAt,isActive,isFeatured,offer,category=id-name-nameAr",
+        "id,name,nameAr,description,descriptionAr,images,price,stock,createdAt,isActive,isFeatured,offer,category=id-name-nameAr",
     });
     // "id,name,nameAr,description,price,costPrice,stock,minStock,sku,barcode,images,weight,dimensions,isActive,isFeatured,categoryId,supplierId,createdAt,updatedAt,category,supplier,orderItems,cartItems,reviews,wishlist,bookDetails"
 

@@ -381,6 +381,7 @@
     "notfoundSuppliers": "لا يوجد موردين"
   },
   "category": {
+    "descriptionAr": "وصف الفئة (بالعربية)",
     "nameIsRequired": "اسم الفئة مطلوب",
     "editCategory": "تعديل الفئة",
     "nameAr": "الاسم بالعربية",
@@ -440,6 +441,7 @@
     }
   },
   "products": {
+    "descriptionAr": "الوصف (بالعربية)",
     "activeProducts": "المنتجات النشطة",
     "inactiveProducts": "المنتجات غير النشطة",
     "featuredProducts": "المنتجات المميزة",
@@ -479,7 +481,7 @@
     "cancel": "إلغاء",
     "egp": "ج",
     "nameIsRequired": "الاسم مطلوب",
-    "nameAR": "الاسم (عربي)",
+    "nameAR": "الاسم (بالعربية)",
     "priceIsRequired": "السعر مطلوب",
     "priceMin": "يجب أن يكون السعر 0 أو أكثر",
     "stockIsRequired": "المخزون مطلوب",
@@ -533,8 +535,12 @@
     }
   },
   "onBoarding": {
+    "contentAr": "المحتوى (بالعربية)",
+    "contentArPlaceholder": "أدخل المحتوى باللغة العربية",
     "noOnBoardingData": "لا توجد بيانات لشاشات الترحيب",
     "title": "شاشات الترحيب",
+    "titleAr": "العنوان (بالعربية)",
+    "titleArPlaceholder": "أدخل العنوان باللغة العربية",
     "add": "إضافة جديد",
     "addTitle": "إضافة شاشة ترحيب",
     "editTitle": "تعديل شاشة الترحيب",
@@ -560,6 +566,8 @@
     "updateButton": "تحديث شاشة الترحيب"
   },
   "ads": {
+    "titleAr": "العنوان (بالعربية)",
+    "descriptionAr": "الوصف (بالعربية)",
     "userTypeRequired": "الرجاء اختيار نوع المستخدم",
     "second": "ث",
     "displayDuration": "مدة العرض",

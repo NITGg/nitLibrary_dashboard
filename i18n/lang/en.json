@@ -576,6 +576,7 @@
     "endDateError": "End date must be after start date"
   },
   "category": {
+    "descriptionAr": "Description (Arabic)",
     "nameIsRequired": "Name is required",
     "nameAr": "Name (Arabic)",
     "description": "Description",
@@ -647,6 +648,7 @@
     "categories": "Categories"
   },
   "products": {
+    "descriptionAr": "Description (Arabic)",
     "activeProducts": "Active Products",
     "inactiveProducts": "Inactive Products",
     "featuredProducts": "Featured Products",
@@ -907,8 +909,12 @@
     "deleteSectionConfirmation": "⚠️ Are you sure you want to delete the entire \"{section}\" section?\n\n This will permanently remove ALL translations in this section from both English and Arabic files.\n\n This action cannot be undone (except from backups)."
   },
   "onBoarding": {
+    "contentAr": "Content (Arabic)",
+    "contentArPlaceholder": "Enter content in Arabic",
     "noOnBoardingData": "No on boarding data available",
     "title": "On Boarding",
+    "titleAr": "Title (Arabic)",
+    "titleArPlaceholder": "Enter title in Arabic",
     "add": "Add New",
     "addTitle": "Add On Boarding",
     "editTitle": "Edit On Boarding",
@@ -937,6 +943,8 @@
     "btn": "Submit"
   },
   "ads": {
+    "titleAr": "Title (Arabic)",
+    "descriptionAr": "Description (Arabic)",
     "userTypeRequired": "User Type is required",
     "second": "s",
     "displayDuration": "Display Duration",

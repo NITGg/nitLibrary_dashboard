@@ -106,6 +106,7 @@ const Categories: React.FC<CategoriesProps> = ({
           <SortDropdown
             options={[
               { label: t("name"), value: "name" },
+              { label: t("nameAr"), value: "nameAr" },
               { label: t("createdAt"), value: "createdAt" },
             ]}
           />
@@ -127,9 +128,10 @@ const Categories: React.FC<CategoriesProps> = ({
         <div className="text-center font-bold py-8">{t("no_data_yet")}</div>
       ) : (
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(270px,_1fr))] gap-8 bg-white rounded-3xl px-5 py-8">
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <CardGridItem
               key={category.id}
+              isPriority={index < 6}
               cardFooter={
                 <>
                   <div className="w-full flex flex-col items-start px-2">

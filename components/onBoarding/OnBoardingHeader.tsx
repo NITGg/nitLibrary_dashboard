@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { LoadingIcon, PlusCircleIcon } from "../icons";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -20,10 +20,10 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useAppContext } from "@/context/appContext";
 import Image from "next/image";
-import { on } from "events";
 
 const OnBoardingHeader = ({ data }: { data: any }) => {
   const t = useTranslations("onBoarding");
+  const locale = useLocale() as "en" | "ar";
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(null as any);
   const [deleteBoard, setDeleteBoard] = useState(null as any);
@@ -43,6 +43,7 @@ const OnBoardingHeader = ({ data }: { data: any }) => {
       await axios.delete(`/api/on-boarding/${deleteBoard}`, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "accept-language": locale,
         },
       });
       dispatch(deleteOnBoarding(deleteBoard));
@@ -93,8 +94,8 @@ const OnBoardingHeader = ({ data }: { data: any }) => {
 
             {/* Content */}
             <div className="p-4">
-              <h3 className="font-semibold text-lg mb-2">{board.title}</h3>
-              <p className="text-gray-600 text-sm">{board.content}</p>
+              <h3 className="font-semibold text-lg mb-2">{locale === "ar" ? board.titleAr : board.title}</h3>
+              <p className="text-gray-600 text-sm">{locale === "ar" ? board.contentAr : board.content}</p>
             </div>
 
             {/* Actions */}

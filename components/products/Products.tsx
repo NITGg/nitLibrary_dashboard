@@ -122,9 +122,10 @@ const Products = ({
         <div className="text-center font-bold py-8">{t("no_data_yet")}</div>
       ) : (
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(270px,_1fr))] gap-8">
-          {products.map((product) => (
+          {products.map((product, index) => (
             <CardGridItem
               key={product.id}
+              isPriority={index < 6}
               cardContent={
                 <>
                   <div className="flex flex-col items-start flex-1">
@@ -132,7 +133,9 @@ const Products = ({
                       {locale === "ar" ? product.nameAr : product.name}
                     </div>
                     <div className="text-[0.7rem] truncate text-gray-500 flex gap-2 items-center justify-center">
-                      {product.description}
+                      {locale === "ar"
+                        ? product.descriptionAr
+                        : product.description}
                     </div>
                   </div>
                   <span className="text-sm text-gray-500">

@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { LoadingIcon, PhotoIcon } from "../icons";
 import ErrorMsg from "../ErrorMsg";
 import { useTranslations } from "next-intl";
-import axios from "axios";
 import { useAppContext } from "@/context/appContext";
 import toast from "react-hot-toast";
 import ImageApi from "../ImageApi";
@@ -13,7 +12,6 @@ import {
   addOnBoarding,
   updateOnBoarding,
 } from "@/redux/reducers/onBoardsReducer";
-import { he } from "react-day-picker/locale";
 
 const AddOnBoarding = ({
   handleClose,
@@ -64,7 +62,10 @@ const AddOnBoarding = ({
       }
 
       formdata.append("title", formData.title);
+      formdata.append("titleAr", formData.titleAr);
+
       formdata.append("content", formData.content);
+      formdata.append("contentAr", formData.contentAr);
 
       if (board) {
         // Edit existing onboarding
@@ -195,6 +196,17 @@ const AddOnBoarding = ({
           <ErrorMsg message={errors?.title?.message as string} />
         </div>
         <div>
+          <input
+            {...register("titleAr", {
+              value: board?.titleAr,
+            })}
+            type="text"
+            className="border py-3 px-2 w-full outline-none"
+            placeholder={t("titleArPlaceholder")}
+          />
+          <ErrorMsg message={errors?.titleAr?.message as string} />
+        </div>
+        <div>
           <textarea
             {...register("content", {
               value: board?.content,
@@ -202,11 +214,21 @@ const AddOnBoarding = ({
             className="border py-3 px-2 w-full outline-none h-20"
             placeholder={t("contentPlaceholder")}
           />
-          <ErrorMsg message={errors?.description?.message as string} />
+          <ErrorMsg message={errors?.content?.message as string} />
         </div>
-        <div className=" w-full ">
+        <div>
+          <textarea
+            {...register("contentAr", {
+              value: board?.contentAr,
+            })}
+            className="border py-3 px-2 w-full outline-none h-20"
+            placeholder={t("contentArPlaceholder")}
+          />
+          <ErrorMsg message={errors?.contentAr?.message as string} />
+        </div>
+        <div className="w-full">
           <button
-            // disabled={loading}
+            disabled={loading}
             className="w-full py-2 rounded-md border-2 border-primary hover:bg-primary hover:text-white duration-200 flex justify-center"
           >
             {loading ? (

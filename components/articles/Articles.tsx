@@ -108,9 +108,10 @@ const Articles: React.FC<ArticlesProps> = ({
         <div className="text-center font-bold py-8">{t("no_data_yet")}</div>
       ) : (
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(270px,_1fr))] gap-8 bg-white rounded-3xl px-5 py-8">
-          {articles.map((article) => (
+          {articles.map((article, index) => (
             <CardGridItem
               key={article.id}
+              isPriority={index < 6}
               cardContent={
                 <div className="w-full flex flex-col items-start px-2">
                   <CardTitle className="text-base font-bold mb-1 truncate w-full">

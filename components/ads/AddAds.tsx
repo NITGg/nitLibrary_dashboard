@@ -16,19 +16,6 @@ import CustomSelect from "../users/CustomSelect";
 import UserInput from "../users/UserInput";
 import PrioritySelect from "./PrioritySelect";
 
-// export const getOptionLabel = (brand: Brand) => (
-//   <div className="flex items-center gap-2">
-//     <Image
-//       alt={brand.name}
-//       width={24}
-//       height={24}
-//       src={brand.logo ?? "/imgs/notfound.png"}
-//       className="size-6 rounded object-cover"
-//     />
-//     <span>{brand.name}</span>
-//   </div>
-// );
-
 const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ad }) => {
   const t = useTranslations("ads");
   const {
@@ -39,12 +26,13 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ad }) => {
     control,
     setError,
   } = useForm();
-  console.log(ad);
 
   useEffect(() => {
     reset({
       title: ad?.title ?? "",
+      titleAr: ad?.titleAr ?? "",
       description: ad?.description ?? "",
+      descriptionAr: ad?.descriptionAr ?? "",
       status: ad?.status ?? "Active",
       startDate: ad?.startDate
         ? new Date(ad.startDate).toISOString().split("T")[0]
@@ -128,6 +116,14 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ad }) => {
             label={t("title")}
             defaultValue={ad?.title}
           />
+          <UserInput
+            errors={errors}
+            roles={{ value: ad?.titleAr, required: t("titleRequired") }}
+            fieldForm="titleAr"
+            register={register}
+            label={t("titleAr")}
+            defaultValue={ad?.titleAr}
+          />
 
           <div className="grid items-center grid-cols-[1fr_2.5fr] max-md:grid-cols-1 w-full h-min">
             <label className="text-nowrap" htmlFor="description">
@@ -147,6 +143,25 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ad }) => {
             ></textarea>
             <ErrorMsg message={errors?.description?.message as string} />
           </div>
+          <div className="grid items-center grid-cols-[1fr_2.5fr] max-md:grid-cols-1 w-full h-min">
+            <label className="text-nowrap" htmlFor="descriptionAr">
+              {t("descriptionAr")}:
+            </label>
+            <textarea
+              defaultValue={ad?.descriptionAr}
+              {...register("descriptionAr", {
+                value: ad?.descriptionAr,
+              })}
+              id="descriptionAr"
+              className={clsx(
+                "border-2 border-[#DADADA] p-2 rounded-xl bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none",
+                "hover:border-primary focus:border-primary",
+                "transition-colors duration-200 ease-in-out"
+              )}
+            ></textarea>
+            <ErrorMsg message={errors?.descriptionAr?.message as string} />
+          </div>
+
 
           <CustomSelect
             roles={{ value: ad?.status, required: t("statusRequired") }}

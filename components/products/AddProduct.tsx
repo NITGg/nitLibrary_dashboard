@@ -20,6 +20,7 @@ interface ProductForm {
   name: string;
   nameAr?: string;
   description?: string;
+  descriptionAr?: string;
   images?: string[];
   price: number;
   //   costPrice?: number;
@@ -58,6 +59,7 @@ const PopupProduct = ({
       offer: product?.offer || undefined,
       stock: product?.stock || undefined,
       description: product?.description || undefined,
+      descriptionAr: product?.descriptionAr || undefined,
       category: product?.category || undefined,
       isActive: product?.isActive || true,
       isFeatured: product?.isFeatured || false,
@@ -182,11 +184,12 @@ const PopupProduct = ({
     try {
       setLoading(true);
       const params =
-        "id,name,nameAr,description,images,price,stock,createdAt,isActive,isFeatured,offer,category=id-name-nameAr";
+        "id,name,nameAr,description,descriptionAr,images,price,stock,createdAt,isActive,isFeatured,offer,category=id-name-nameAr";
       const submitFormData = new FormData();
       submitFormData.append("name", formData.name);
       submitFormData.append("nameAr", formData.nameAr || "");
       submitFormData.append("description", formData.description || "");
+      submitFormData.append("descriptionAr", formData.descriptionAr || "");
       submitFormData.append("price", String(formData.price));
       submitFormData.append("stock", String(formData.stock));
       submitFormData.append("isActive", String(formData.isActive));
@@ -416,6 +419,12 @@ const PopupProduct = ({
         label={t("description")}
         error={errors.description?.message as string}
         {...register("description")}
+      />
+      <OutlineTextArea
+        id="product-descriptionAr"
+        label={t("descriptionAr")}
+        error={errors.descriptionAr?.message as string}
+        {...register("descriptionAr")}
       />
       <FetchSelect<Pick<Category, "id" | "name" | "nameAr">>
         fieldForm={"category"}

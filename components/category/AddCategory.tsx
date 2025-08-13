@@ -47,6 +47,7 @@ const PopupCategory: React.FC<PopupCategoryProps> = ({
       name: category?.name || "",
       nameAr: category?.nameAr || "",
       description: category?.description || "",
+      descriptionAr: category?.descriptionAr || "",
       isActive: category?.isActive ?? true,
       parent: category?.parent || undefined,
     },
@@ -108,6 +109,7 @@ const PopupCategory: React.FC<PopupCategoryProps> = ({
       submitFormData.append("name", formData.name);
       submitFormData.append("nameAr", formData.nameAr);
       submitFormData.append("description", formData.description || "");
+      submitFormData.append("descriptionAr", formData.descriptionAr || "");
       submitFormData.append("isActive", String(formData.isActive));
       if (formData.parent)
         submitFormData.append("parentId", String(formData.parent));
@@ -116,7 +118,7 @@ const PopupCategory: React.FC<PopupCategoryProps> = ({
       }
 
       const fields =
-        "id,name,nameAr,description,imageUrl,parent=id-name,createdAt,isActive,_count=children-products";
+        "id,name,nameAr,description,descriptionAr,imageUrl,parent=id-name,createdAt,isActive,_count=children-products";
 
       if (category?.id) {
         const { data } = await axios.put(
@@ -231,6 +233,13 @@ const PopupCategory: React.FC<PopupCategoryProps> = ({
         label={t("description")}
         error={errors.description?.message as string}
         {...register("description")}
+        rows={6}
+      />
+      <OutlineTextArea
+        id="descriptionAr"
+        label={t("descriptionAr")}
+        error={errors.descriptionAr?.message as string}
+        {...register("descriptionAr")}
         rows={6}
       />
 

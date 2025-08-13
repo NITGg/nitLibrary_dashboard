@@ -6,6 +6,7 @@ export interface Category {
   name: string;
   nameAr: string;
   description?: string;
+  descriptionAr?: string;
   imageUrl?: string;
   parentId?: number;
   parent?: Partial<Category>;
@@ -57,7 +58,7 @@ export const fetchCategories = async (
       limit: searchParams.limit?.toString() ?? "10",
       sort: searchParams.sort?.toString() ?? "-createdAt",
       fields:
-        "id,name,nameAr,description,imageUrl,parent=id-name,createdAt,isActive,_count=children-products",
+        "id,name,nameAr,description,descriptionAr,imageUrl,parent=id-name,createdAt,isActive,_count=children-products",
     });
 
     if (searchParams.skip)

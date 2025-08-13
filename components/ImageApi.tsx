@@ -1,28 +1,47 @@
 "use client";
 import Image, { ImageProps } from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
-const ImageApi = (props?: ImageProps) => {
-  const [imgSrc, setImgSrc] = useState(
-    props?.src ? `${props.src}` : "/imgs/notfound.png"
-  );
+type Props = ImageProps & {
+  fallbackSrc?: string;
+  errorSrc?: string;
+};
 
-  const handleError = () => {
-    setImgSrc("/imgs/notfound.png");
-  };
-  const pro = { ...props };
-  delete pro.src;
-  delete pro.alt;
-  delete pro.onError;
+const ImageApi = ({
+  src,
+  alt = "image",
+  fallbackSrc = "/imgs/notfound.png",
+  errorSrc = "/imgs/notfound.png",
+  ...rest
+}: Props) => {
+  const [imgSrc, setImgSrc] = useState<ImageProps["src"]>(src || fallbackSrc);
+  const [loading, setLoading] = useState(true);
+
+  // Update when parent src changes
+  useEffect(() => {
+    if (src) {
+      setImgSrc(src);
+      setLoading(true);
+    }
+  }, [src]);
+
   return (
-    imgSrc != undefined && (
+    <div className="relative w-full h-full">
+      {loading && (
+        <Skeleton className="absolute inset-0 w-full h-full animate-pulse" />
+      )}
       <Image
-        src={imgSrc || "/imgs/notfound.png"}
-        alt={props?.alt || "notfound"}
-        onError={handleError}
-        {...pro}
+        {...rest}
+        src={imgSrc}
+        alt={alt}
+        onLoad={() => setLoading(false)}
+        onError={() => {
+          setImgSrc(errorSrc);
+          setLoading(false);
+        }}
       />
-    )
+    </div>
   );
 };
 

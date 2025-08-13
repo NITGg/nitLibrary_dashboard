@@ -9,12 +9,14 @@ interface CardGridItemProps {
   };
   cardContent?: React.ReactNode;
   cardFooter: React.ReactNode;
+  isPriority?: boolean; // Optional prop to indicate priority
 }
 
 const CardGridItem = ({
   image,
   cardFooter,
   cardContent,
+  isPriority = false,
 }: CardGridItemProps) => {
   return (
     <Card className="min-h-[220px] max-w-[350px] flex flex-col items-center shadow-md bg-white rounded-2xl transition hover:shadow-lg">
@@ -27,6 +29,7 @@ const CardGridItem = ({
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
           quality={100}
           className="object-cover rounded-t-lg"
+          priority={isPriority}
         />
       </div>
       {cardContent && (

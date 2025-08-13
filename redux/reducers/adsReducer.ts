@@ -26,7 +26,9 @@ export enum AdsFrequency {
 export type Ad = {
   id: number;
   title: string;
+  titleAr: string;
   description?: string;
+  descriptionAr?: string;
   imageUrl: string;
   targetUrl: string;
   startDate: Date;
