@@ -3,7 +3,7 @@ import { EyeIcon } from "@/components/icons";
 import Pagination from "@/components/ui/Pagination";
 import Table, { TableHeader } from "@/components/ui/Table";
 import { DateToText } from "@/lib/DateToText";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import OrderDetails from "./OrderDetails";
 import { Order } from "@/app/[locale]/orders/OrdersData";
@@ -20,9 +20,8 @@ const UserOrders = ({
   totalPages: number;
   sumOrders: orderSums;
 }) => {
-  console.log(sumOrders);
-
   const t = useTranslations("user");
+  const locale = useLocale() as "en" | "ar";
   const [openOrderDetails, setOpenOrderDetails] = useState<boolean>(false);
   const [orderDetails, setOrderDetails] = useState<Order | null>(null);
   const [userOrders, setUserOrders] = useState<Order[] | []>([]);
@@ -76,18 +75,16 @@ const UserOrders = ({
             className={"odd:bg-white even:bg-[#F6EEFA] border-b"}
           >
             <td className="px-6 py-4 whitespace-nowrap">
-              {DateToText(order.createdAt)}
+              {DateToText(order.createdAt, locale)}
             </td>
             <td className="px-6 py-4 whitespace-nowrap">{order.orderNumber}</td>
-            <td className="px-6 py-4 whitespace-nowrap">
-              {order.totalAmount} SR
-            </td>
+            <td className="px-6 py-4 whitespace-nowrap">{order.totalAmount}</td>
             <td className="px-6 py-4 whitespace-nowrap">
               {order.shippingAddress as string}
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
               {order.status === "DELIVERED" && order.updatedAt
-                ? DateToText(order.updatedAt)
+                ? DateToText(order.updatedAt, locale)
                 : "-"}
             </td>
             <td className="px-6 py-4 flex justify-center">

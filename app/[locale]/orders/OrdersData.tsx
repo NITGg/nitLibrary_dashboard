@@ -14,7 +14,6 @@ export type OrderStatus =
 
 export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED";
 export type PaymentMethod = "CASH" | "CARD";
-
 export interface OrderItem {
   id: string;
   orderId?: string;

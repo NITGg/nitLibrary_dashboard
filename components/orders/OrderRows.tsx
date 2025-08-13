@@ -1,5 +1,5 @@
 "use client";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { DateToText } from "@/lib/DateToText";
 import { Link } from "@/i18n/routing";
 import Table, { TableHeader } from "@/components/ui/Table";
@@ -7,12 +7,28 @@ import Pagination from "../ui/Pagination";
 import DownloadButton from "../ui/DownloadButton";
 import ImageApi from "../ImageApi";
 import OrderDetails from "../users/id/userOrders/OrderDetails";
-import { EyeIcon } from "../icons";
-import { useState } from "react";
-import { Order } from "@/app/[locale]/orders/OrdersData";
+import { EyeIcon, LoadingIcon } from "../icons";
+import { useEffect, useState } from "react";
+import {
+  Order,
+  OrderStatus,
+  PaymentStatus,
+} from "@/app/[locale]/orders/OrdersData";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useAppContext } from "@/context/appContext";
+import { Button } from "../ui/button";
+import { Save } from "lucide-react";
 
 const OrderRows = ({
-  orders,
+  orders: initialOrders,
   count,
   totalPages,
 }: {
@@ -21,7 +37,26 @@ const OrderRows = ({
   totalPages: number;
 }) => {
   const t = useTranslations("orders");
+  const lang = useLocale() as "en" | "ar";
+  const { token } = useAppContext();
+
+  const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [orderDetails, setOrderDetails] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(false);
+  const paymentStatusOptions: PaymentStatus[] = [
+    "PENDING",
+    "PAID",
+    "FAILED",
+    "REFUNDED",
+  ];
+  const orderStatusOptions: OrderStatus[] = [
+    "PENDING",
+    "CONFIRMED",
+    "PROCESSING",
+    "SHIPPED",
+    "DELIVERED",
+    "CANCELLED",
+  ];
 
   const headers: TableHeader[] = [
     { name: "id", className: "px-3 py-2", sortable: true, key: "id" },
@@ -39,6 +74,18 @@ const OrderRows = ({
     },
     { name: "items", className: "px-3 py-2" },
     {
+      name: "status",
+      className: "px-3 py-2",
+      sortable: true,
+      key: "status",
+    },
+    {
+      name: "paymentStatus",
+      className: "px-3 py-2",
+      sortable: true,
+      key: "paymentStatus",
+    },
+    {
       name: "createdAt",
       className: "px-3 py-2",
       sortable: true,
@@ -46,6 +93,57 @@ const OrderRows = ({
     },
     { name: "action", className: "flex justify-center items-center" },
   ];
+
+  const handleUpdate = async (id: Order["id"]) => {
+    setLoading(true);
+    try {
+      await axios.put<{ order: Order }>(
+        `/api/orders/${id}`,
+        {
+          status: orders.find((o) => o.id === id)?.status,
+          paymentStatus: orders.find((o) => o.id === id)?.paymentStatus,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            "accept-language": lang,
+          },
+        }
+      );
+      toast.success(t("updatedSuccessfully"));
+    } catch (error) {
+      console.error("Error updating order:", error);
+      toast.error(t("failedToUpdate"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusColor = (status: OrderStatus | PaymentStatus) => {
+    switch (status) {
+      case "PENDING":
+        return "bg-yellow-400 text-white ring-offset-yellow-400 focus:ring-yellow-500";
+      case "CONFIRMED":
+      case "DELIVERED":
+      case "PAID":
+        return "bg-green-500 text-white ring-offset-green-500 focus:ring-green-500";
+      case "SHIPPED":
+        return "bg-blue-500 text-white ring-offset-blue-500 focus:ring-blue-500";
+      case "PROCESSING":
+        return "bg-orange-500 text-white ring-offset-orange-500 focus:ring-orange-500";
+      case "CANCELLED":
+      case "FAILED":
+      case "REFUNDED":
+        return "bg-red-500 text-white ring-offset-red-500 focus:ring-red-500";
+      default:
+        return "bg-gray-300 text-black ring-offset-gray-300 focus:ring-gray-500";
+    }
+  };
+
+  useEffect(() => {
+    setOrders(initialOrders);
+  }, [initialOrders]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -95,7 +193,7 @@ const OrderRows = ({
             </td>
           </tr>
         )}
-        {orders?.map((order) => (
+        {orders?.map((order, index) => (
           <tr
             key={order.id}
             className="odd:bg-white even:bg-[#F0F2F5] border-b"
@@ -123,22 +221,98 @@ const OrderRows = ({
             <td className="px-3 py-2 whitespace-nowrap">
               {t("totalPrice", { price: order.totalAmount })}
             </td>
-            <td className="px-3 py-2 whitespace-nowrap">{order?.items?.length ?? 0}</td>
             <td className="px-3 py-2 whitespace-nowrap">
-              {DateToText(order.createdAt)}
+              {order?.items?.length ?? 0}
             </td>
             <td className="px-3 py-2 whitespace-nowrap">
-              <button
+              <Select
+                value={order.status}
+                onValueChange={(value) => {
+                  const newStatus = value as OrderStatus;
+                  setOrders((prev) => {
+                    const updated = [...prev];
+                    updated[index] = { ...prev[index], status: newStatus };
+                    return updated;
+                  });
+                }}
+              >
+                <SelectTrigger className={getStatusColor(order.status)}>
+                  <SelectValue placeholder={t(order.status)} />
+                </SelectTrigger>
+                <SelectContent>
+                  {orderStatusOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {t(option)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </td>
+            <td className="px-3 py-2 whitespace-nowrap">
+              <Select
+                defaultValue={order.paymentStatus}
+                onValueChange={(value) => {
+                  const newStatus = value as PaymentStatus;
+                  setOrders((prev) => {
+                    const updated = [...prev];
+                    updated[index] = {
+                      ...prev[index],
+                      paymentStatus: newStatus,
+                    };
+                    return updated;
+                  });
+                }}
+              >
+                <SelectTrigger className={getStatusColor(order.paymentStatus)}>
+                  <SelectValue placeholder={t(order.paymentStatus)} />
+                </SelectTrigger>
+                <SelectContent>
+                  {paymentStatusOptions.map((option) => (
+                    <SelectItem
+                      key={option}
+                      value={option}
+                      className="text-black"
+                    >
+                      {t(option)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </td>
+            <td className="px-3 py-2 whitespace-nowrap">
+              {DateToText(order.createdAt, lang)}
+            </td>
+            <td className="px-3 py-2 whitespace-nowrap">
+              {(initialOrders.find((o) => o.id === order.id)?.status !==
+                order.status ||
+                initialOrders.find((o) => o.id === order.id)?.paymentStatus !==
+                  order.paymentStatus) && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleUpdate(order.id)}
+                  type="button"
+                >
+                  {loading ? (
+                    <LoadingIcon className="size-5 animate-spin" />
+                  ) : (
+                    <Save className="size-5" />
+                  )}
+                </Button>
+              )}
+
+              <Button
                 onClick={() => setOrderDetails(order)}
                 type="button"
-                className="text-primary hover:text-gray-700 transition-colors flex justify-center items-center size-full"
+                variant="ghost"
+                size="icon"
+                // className="text-primary hover:text-gray-700 transition-colors flex justify-center items-center size-full"
               >
                 <EyeIcon className="size-5" />
-              </button>
+              </Button>
             </td>
           </tr>
         ))}
-
       </Table>
       {orderDetails && (
         <OrderDetails

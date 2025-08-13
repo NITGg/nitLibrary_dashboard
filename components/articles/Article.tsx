@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import { useAppContext } from "@/context/appContext";
 import axios from "axios";
 import { DeleteIcon, LoadingIcon } from "../icons";
+import { DateToText } from "@/lib/DateToText";
 
 interface ArticleProps {
   article: ArticleType;
@@ -37,7 +38,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   const [loading, setLoading] = useState(false);
 
   const t = useTranslations("article");
-  const locale = useLocale();
+  const locale = useLocale() as "en" | "ar";
   const isRTL = locale === "ar";
   const { token } = useAppContext();
   const router = useRouter();
@@ -45,15 +46,6 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
   useEffect(() => {
     setCurrentArticle(article);
   }, [article]);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA" : "en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date);
-  };
 
   const handleDeleteArticle = async () => {
     if (!token) return;
@@ -156,7 +148,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
             </div>
             <div className="flex items-center gap-2">
               <CalendarDays className="size-4" />
-              <span>{formatDate(currentArticle.publishedAt)}</span>
+              <span>{DateToText(currentArticle.publishedAt, locale)}</span>
             </div>
             <div className="flex items-center gap-2">
               <Eye className="size-4" />
@@ -166,7 +158,7 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
 
           {/* Summary */}
           {currentArticle.summary && (
-            <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-primary">
+            <div className="bg-gray-50 rounded-lg p-6 border-s-4 border-primary">
               <h3 className="font-semibold text-gray-900 mb-2">
                 {t("summary")}
               </h3>
@@ -204,11 +196,12 @@ const Article: React.FC<ArticleProps> = ({ article }) => {
           <div className="border-t pt-6 mt-8">
             <div className="flex items-center justify-between text-sm text-gray-500">
               <span>
-                {t("createdAt")}: {formatDate(currentArticle.createdAt)}
+                {t("createdAt")}: {DateToText(currentArticle.createdAt, locale)}
               </span>
               {currentArticle.updatedAt !== currentArticle.createdAt && (
                 <span>
-                  {t("updatedAt")}: {formatDate(currentArticle.updatedAt)}
+                  {t("updatedAt")}:{" "}
+                  {DateToText(currentArticle.updatedAt, locale)}
                 </span>
               )}
             </div>

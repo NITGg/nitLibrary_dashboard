@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { DeleteIcon, EditIcon, PlusCircleIcon } from "../icons";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import ImageApi from "../ImageApi";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { Ad, setAds } from "@/redux/reducers/adsReducer";
@@ -22,6 +22,7 @@ const AdsList = ({
   totalPages: number;
 }) => {
   const t = useTranslations("ads");
+  const locale = useLocale() as "en" | "ar";
   const [open, setOpen] = useState<boolean>(false);
   const [edit, setEdit] = useState<Ad | undefined>(undefined);
   const [deleteAd, setDeleteAd] = useState<Ad | null>(null);
@@ -105,10 +106,10 @@ const AdsList = ({
               </td>
               <td className="px-6 py-4 whitespace-nowrap">{ad.adType}</td>
               <td className="px-6 py-4 whitespace-nowrap">
-                {DateToText(ad.startDate.toString())}
+                {DateToText(ad.startDate.toString(), locale)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                {DateToText(ad.endDate.toString())}
+                {DateToText(ad.endDate.toString(), locale)}
               </td>
               <td className="px-6 py-4">
                 <div className="flex gap-2 items-center justify-center">

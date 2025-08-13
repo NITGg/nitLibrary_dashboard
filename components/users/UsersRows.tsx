@@ -1,5 +1,5 @@
 "use client";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import ImageApi from "../ImageApi";
 import {
@@ -38,6 +38,7 @@ const UsersRows = ({
   totalPages: number;
 }) => {
   const t = useTranslations("user");
+  const locale = useLocale() as "en" | "ar";
   const { token } = useAppContext();
   const dispatch = useAppDispatch();
   const [addUser, setAddUser] = useState<boolean>(false);
@@ -74,6 +75,7 @@ const UsersRows = ({
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "accept-language": locale,
           },
         }
       );
@@ -128,11 +130,7 @@ const UsersRows = ({
                 <DownloadButton<User>
                   model="user"
                   fields={["fullname", "email", "phone", "createdAt"]}
-                  // filters={{
-                  //   some_userRole,
-                  // }}
                   items={["fullname", "email", "phone"]}
-                  // disableKeyword={!!role}
                 />
               }
             />
@@ -177,7 +175,7 @@ const UsersRows = ({
               </td>
               <td className={"px-3 py-2 whitespace-nowrap"}>{user.role}</td>
               <td className="px-3 py-2 whitespace-nowrap">
-                {DateToText(user.createdAt ?? "")}
+                {DateToText(user.createdAt ?? "", locale)}
               </td>
               <td className="px-3 py-2">
                 <div className="flex gap-2 justify-center items-center">

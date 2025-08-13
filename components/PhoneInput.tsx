@@ -9,7 +9,13 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import { Select } from "./ui/select";
+import {
+  Select,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "./ui/select";
 import ErrorMsg from "./ErrorMsg";
 
 // Country data with flag emojis and codes
@@ -128,14 +134,20 @@ const PhoneInput = <TFieldValues extends FieldValues>({
             <Select
               value={selectedCountryCode}
               onValueChange={handleCountryChange}
-              options={countries.map((country) => ({
-                value: country.code,
-                label: `${country.code}`,
-              }))}
-              placeholder="Code"
+              // placeholder="Code"
               disabled={disabled}
-              className="border-0 rounded-none ring-0 py-0 px-1 focus:ring-0 shadow-none h-[44px] text-xs bg-transparent"
-            />
+            >
+              <SelectTrigger className="border-0 rounded-none ring-0 py-0 px-1 focus:ring-0 shadow-none h-[44px] text-xs bg-transparent">
+                <SelectValue placeholder="Code" />
+              </SelectTrigger>
+              <SelectContent>
+                {countries.map((country) => (
+                  <SelectItem key={country.code} value={country.code}>
+                    {country.code}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           {/* Phone Number Input */}
           <input

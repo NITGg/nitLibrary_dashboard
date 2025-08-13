@@ -125,6 +125,12 @@
     "url": "رابط"
   },
   "orders": {
+    "updatedSuccessfully": "تم تحديث الطلب بنجاح",
+    "failedToUpdate": "فشل في تحديث الطلب",
+    "PAID": "مدفوع",
+    "FAILED": "فشل",
+    "REFUNDED": "مسترد",
+    "paymentStatus": "حالة الدفع",
     "PENDING": "قيد الانتظار",
     "CONFIRMED": "تم التأكيد",
     "PROCESSING": "جاري المعالجة",
@@ -156,25 +162,26 @@
   },
   "contact": {
     "response": "الرد",
-    "contacts": "جهات الاتصال",
-    "name": "الاسم",
-    "email": "البريد الإلكتروني",
-    "message": "الرسالة",
     "title": "الرسائل",
-    "read": "قراءة",
-    "unread": "غير مقروءة",
+    "label": "",
     "delete_success": "تم حذف الرسالة بنجاح!!",
     "delete_error": "فشل حذف الرسالة!!",
+    "read": "قراءة",
+    "unread": "غير مقروءة",
+    "cancel": "إلغاء",
     "delete_message": "هل أنت متأكد من حذف هذه الرسالة؟",
     "delete_confirmation": "حذف الرسالة",
     "no": "لا",
     "yes": "نعم",
+    "contacts": "جهات الاتصال",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "message": "الرسالة",
     "no data yet": "لا توجد بيانات بعد",
     "deleteContact": "حذف جهة الاتصال",
     "deleteMessage": "هل أنت متأكد من حذف جهة الاتصال هذه؟",
     "updateContact": "تحديث جهة الاتصال",
     "updateMessage": "تحديث معلومات جهة الاتصال",
-    "cancel": "إلغاء",
     "delete": "حذف",
     "update": "تحديث",
     "nameRequired": "الاسم مطلوب",
@@ -195,7 +202,8 @@
     "notificationSentSuccessfully": "تم إرسال الإشعار بنجاح",
     "failedToSendNotification": "فشل في إرسال الإشعار",
     "date": "التاريخ",
-    "action": "الإجراء"
+    "action": "الإجراء",
+    "responseRequired": "الرد مطلوب"
   },
   "dashboard": {
     "totalProducts": "إجمالي المنتجات",
@@ -221,25 +229,6 @@
     "totalRepresentatives": "إجمالي المندوبين",
     "popularCategories": "الفئات الشائعة",
     "recentActivity": "النشاط الأخير"
-  },
-  "order": {
-    "title": "الطلبات",
-    "orderDetails": "تفاصيل الطلب",
-    "date": "التاريخ",
-    "quantity": "الكمية",
-    "total": "المبلغ",
-    "status": "الحالة",
-    "viewDetail": "عرض التفاصيل",
-    "notFound": "لا يوجد طلبات بعد",
-    "orderId": "رقم الطلب",
-    "orderDate": "تاريخ الطلب",
-    "totalAmount": "المبلغ الإجمالي",
-    "table": {
-      "totalPrice": "السعر الإجمالي",
-      "status": "الحالة",
-      "action": "الإجراء",
-      "address": "العنوان"
-    }
   },
   "user": {
     "PENDING": "قيد الانتظار",
@@ -647,7 +636,7 @@
     "successUpdate": "تم تحديث الإعلان بنجاح!"
   },
   "Tablecomponent": {
-    "1": "1",
+    "paymentStatus": "حالة الدفع",
     "filter": "تصفية",
     "clearAllFilters": "مسح جميع الفلاتر",
     "noFiltersAvailable": "لا توجد فلاتر متاحة",

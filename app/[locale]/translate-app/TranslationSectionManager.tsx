@@ -15,7 +15,8 @@ import {
   Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import clsx from "clsx";
 
 interface TranslationData {
   [key: string]: string | TranslationData;
@@ -37,6 +38,7 @@ export default function TranslationSectionManager({
   onBack,
 }: Readonly<TranslationSectionManagerProps>) {
   const t = useTranslations("translations");
+  const locale = useLocale() as "en" | "ar";
   const [sectionData, setSectionData] = useState<{
     en: TranslationData;
     ar: TranslationData;
@@ -253,9 +255,9 @@ export default function TranslationSectionManager({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center gap-3">
           <Button variant="outline" size="sm" onClick={onBack}>
-            <ArrowLeft className="size-4 ms-2" />
+            <ArrowLeft className={clsx(locale === "ar" && "rotate-180")} />
             {t("backToSections")}
           </Button>
           <div>
@@ -273,7 +275,7 @@ export default function TranslationSectionManager({
             variant="outline"
             size="sm"
           >
-            <Download className="size-4 ms-2" />
+            <Download />
             {t("exportSection")}
           </Button>
           <Button
@@ -281,8 +283,8 @@ export default function TranslationSectionManager({
             disabled={isSaving}
             size="sm"
           >
-            <Save className="size-4 ms-2" />
-            {isSaving ? <Loader2 className="size-4 animate-spin" /> : t("saveSection")}
+            <Save />
+            {isSaving ? <Loader2 className="animate-spin" /> : t("saveSection")}
           </Button>
         </div>
       </div>
@@ -328,7 +330,7 @@ export default function TranslationSectionManager({
               onChange={(e) => setNewValueAr(e.target.value)}
             />
             <Button onClick={addNewTranslation}>
-              <Plus className="size-4 ms-2" />
+              <Plus />
               {t("addToSection", { section })}
             </Button>
           </div>
@@ -395,7 +397,7 @@ export default function TranslationSectionManager({
                     size="sm"
                     onClick={() => deleteTranslation(translation.key)}
                   >
-                    <Trash2 className="size-4" />
+                    <Trash2 />
                   </Button>
                 </div>
               </div>

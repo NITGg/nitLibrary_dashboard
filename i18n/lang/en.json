@@ -84,6 +84,12 @@
     "profile": "Profile"
   },
   "orders": {
+    "updatedSuccessfully": "Order updated successfully",
+    "failedToUpdate": "Failed to update order",
+    "PAID": "Paid",
+    "FAILED": "Failed",
+    "REFUNDED": "Refunded",
+    "paymentStatus": "Payment Status",
     "PENDING": "Pending",
     "CONFIRMED": "Confirmed",
     "PROCESSING": "Processing",
@@ -305,7 +311,7 @@
     "noMoreResults": "No more results"
   },
   "Tablecomponent": {
-    "1": "1",
+    "paymentStatus": "Payment Status",
     "filter": "Filter",
     "clearAllFilters": "Clear All Filters",
     "noFiltersAvailable": "No Filters Available",
@@ -785,28 +791,15 @@
     "response": "Response",
     "title": "Contact Request",
     "label": "Contact Data",
-    "deleteSuccess": "Successfully delete Contact!!",
     "delete_success": "Successfully delete Contact!!",
     "delete_error": "Failed to delete Contact!!",
     "read": "Read",
     "unread": "Unread",
-    "contact_request": "Contact Request",
     "cancel": "Cancel",
     "delete_message": "Do you want to delete this contact?",
     "delete_confirmation": "Delete Contact",
     "no": "No",
     "yes": "Yes",
-    "table": {
-      "name": "Name",
-      "email": "Email",
-      "date": "Date",
-      "comment": "Message",
-      "view": "View"
-    },
-    "popup": {
-      "delete": "Delete",
-      "message": "Message"
-    },
     "contacts": "Contacts",
     "name": "Name",
     "email": "Email",
@@ -836,7 +829,8 @@
     "notificationSentSuccessfully": "Notification sent successfully",
     "failedToSendNotification": "Failed to send notification",
     "date": "Date",
-    "action": "Action"
+    "action": "Action",
+    "responseRequired": "Response is required"
   },
   "popup": {
     "agree": "Agree",
@@ -882,7 +876,7 @@
     "languages": "Languages",
     "supported": "Supported",
     "notFound": "No Data",
-    "loading":"Loading {section} translations...",
+    "loading": "Loading {section} translations...",
     "backToSections": "Back to Sections",
     "translationsForSection": "Translations for {section}",
     "managingTranslationsForSection": "Managing translations for the {section} section",
@@ -1017,18 +1011,6 @@
     "adPlacementRequired": "Ad Placement is required",
     "success": "Successfully add new ad!!",
     "successUpdate": "Successfully updated ad!"
-  },
-  "order": {
-    "title": "Orders",
-    "id": "Id",
-    "name": "Name",
-    "phone": "Phone",
-    "email": "Email",
-    "address": "Address",
-    "createdAt": "Created at",
-    "status": "Status",
-    "action": "Action",
-    "totalPrice": "Total Price"
   },
   "categories": {
     "nameAr": "Name Arabic",

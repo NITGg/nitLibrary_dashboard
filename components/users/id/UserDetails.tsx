@@ -36,7 +36,7 @@ const UserDetails = ({ user }: { user: User }) => {
   const [deleteImage, setDeleteImage] = useState(false);
   const [openDeleteUser, setOpenDeleteUser] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User>(user);
-  const locale = useLocale() || "ar";
+  const locale = useLocale() as "en" | "ar";
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
@@ -153,7 +153,7 @@ const UserDetails = ({ user }: { user: User }) => {
                   CreatedAt:
                 </p>
                 <div className="text-sm text-nowrap">
-                  {DateToText(user?.createdAt ?? "")}
+                  {DateToText(user?.createdAt ?? "", locale)}
                 </div>
               </div>
               <div className="flex justify-between flex-wrap items-center">
@@ -161,7 +161,7 @@ const UserDetails = ({ user }: { user: User }) => {
                   UpdatedAt:
                 </p>
                 <div className="text-sm text-nowrap">
-                  {DateToText(user?.updatedAt ?? "")}
+                  {DateToText(user?.updatedAt ?? "", locale)}
                 </div>
               </div>
               <div className="flex justify-between flex-wrap items-center">
@@ -169,7 +169,7 @@ const UserDetails = ({ user }: { user: User }) => {
                   PasswordLastUpdated:
                 </p>
                 <div className="text-sm text-nowrap">
-                  {DateToText(user?.passwordLastUpdated ?? "")}
+                  {DateToText(user?.passwordLastUpdated ?? "", locale)}
                 </div>
               </div>
               <div className="flex justify-between flex-wrap items-center">
@@ -177,12 +177,12 @@ const UserDetails = ({ user }: { user: User }) => {
                   LastLoginAt:
                 </p>
                 <div className="text-sm text-nowrap">
-                  {DateToText(user?.lastLoginAt ?? "")}
+                  {DateToText(user?.lastLoginAt ?? "", locale)}
                 </div>
               </div>
               <div className="flex justify-between flex-wrap items-center">
                 <p className={clsx("font-medium text-sm text-left")}>uuid:</p>
-                {/* <div>{user.uuid}</div> */}
+                <div>{user.id}</div>
               </div>
               {!user?.Address?.length ? (
                 " "

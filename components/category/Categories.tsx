@@ -69,7 +69,7 @@ const Categories: React.FC<CategoriesProps> = ({
     try {
       setLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/category/${openDelete}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories/${openDelete}`,
         {
           method: "DELETE",
           headers: {

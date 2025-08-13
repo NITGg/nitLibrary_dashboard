@@ -24,7 +24,7 @@ const UserNotifications = ({
 }) => {
   const t = useTranslations("user");
   const { token } = useAppContext();
-  const locale = useLocale();
+  const locale = useLocale() as "en" | "ar";
   const [resendingId, setResendingId] = useState<string | null>(null);
   const [userNotifications, setUserNotifications] = useState<
     UserNotification[] | []
@@ -45,11 +45,12 @@ const UserNotifications = ({
     try {
       setResendingId(notificationId);
       await axios.post(
-        `/api/userss/notifications/${notificationId}/resend`,
+        `/api/users/notifications/${notificationId}/resend`,
         {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "accept-language": locale,
           },
         }
       );
@@ -75,7 +76,7 @@ const UserNotifications = ({
             <DownloadButton<UserNotification>
               model="order"
               fields={["id"]}
-              apiUrl="/api/userss/notifications/download"
+              apiUrl="/api/users/notifications/download"
             />
           }
         />
@@ -101,7 +102,7 @@ const UserNotifications = ({
             {locale === "en" ? notification.title : notification.titleAr}
           </td>
           <td className="px-6 py-4 whitespace-nowrap">
-            {DateToText(notification.createdAt)}
+            {DateToText(notification.createdAt, locale)}
           </td>
           <td className="px-6 py-4 whitespace-nowrap">
             {notification.read ? "yes" : "- - - -"}

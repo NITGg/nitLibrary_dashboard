@@ -1,5 +1,5 @@
 "use client";
-import { Order, OrderStatus } from "@/app/[locale]/orders/OrdersData";
+import { Order } from "@/app/[locale]/orders/OrdersData";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 
 const OrderDetails = ({
@@ -20,25 +20,7 @@ const OrderDetails = ({
   order: Order;
 }) => {
   const t = useTranslations("orders");
-  // Helper for status color
-  const getStatusColor = (status: OrderStatus) => {
-    switch (status) {
-      case "PENDING":
-        return "bg-yellow-400 text-white";
-      case "CONFIRMED":
-      case "DELIVERED":
-        return "bg-green-500 text-white";
-      case "SHIPPED":
-        return "bg-blue-500 text-white";
-      case "PROCESSING":
-        return "bg-orange-500 text-white";
-      case "CANCELLED":
-        return "bg-red-500 text-white";
-      default:
-        return "bg-gray-300 text-black";
-    }
-  };
-
+  const locale = useLocale();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-[95vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl rounded-3xl bg-[#f0f2f5] p-0">
@@ -59,7 +41,6 @@ const OrderDetails = ({
                   {t("afterOffered")}
                 </th>
                 <th className="px-4 py-3 whitespace-nowrap">{t("quantity")}</th>
-                <th className="px-4 py-3 whitespace-nowrap">{t("status")}</th>
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -86,22 +67,15 @@ const OrderDetails = ({
                       </div>
                     </td>
                     <td className="px-4 py-3 font-bold">
-                      {item?.product?.nameAr || item?.product?.name || "-"}
+                      {locale === "ar"
+                        ? item?.product?.nameAr ?? item?.product?.name
+                        : item?.product?.name || "-"}
                     </td>
                     <td className="px-4 py-3">{item?.price ?? "-"}</td>
                     <td className="px-4 py-3">
                       {item?.product?.offer ?? item?.product?.price ?? "-"}
                     </td>
                     <td className="px-4 py-3">{item.quantity ?? 1}</td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`px-4 py-2 rounded-lg font-bold ${getStatusColor(
-                          order.status
-                        )}`}
-                      >
-                        {t(order.status)}
-                      </span>
-                    </td>
                   </tr>
                 );
               })}
@@ -109,7 +83,7 @@ const OrderDetails = ({
             <tfoot>
               <tr className="bg-[#f0f2f5]">
                 <td
-                  colSpan={5}
+                  colSpan={4}
                   className="text-right px-4 py-4 font-bold text-xl"
                 >
                   {t("total")}
